@@ -33,7 +33,6 @@ namespace BowlingLeague.Controllers
         {
             ViewBag.Bowlers = _repo.Bowlers.ToList();
             return RedirectToAction("EditBowler", bowlerid);
-
         }
 
         [HttpPost]
@@ -42,7 +41,6 @@ namespace BowlingLeague.Controllers
             if (ModelState.IsValid)
             {
                 _repo.CreateBowler(b);
-                _repo.SaveBowler(b);
 
                 return RedirectToAction("Index");
             }
@@ -82,7 +80,6 @@ namespace BowlingLeague.Controllers
         public IActionResult DeleteBowler(Bowler b)
         {
             _repo.DeleteBowler(b);
-
 
             return RedirectToAction("ViewAppts");
         }
