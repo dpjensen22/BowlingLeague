@@ -1,3 +1,7 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BowlingLeague.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,10 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BowlingLeague
 {
@@ -26,16 +26,15 @@ namespace BowlingLeague
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
             services.AddDbContext<BowlingLeagueDbContext>(options =>
-           {
-               options.UseMySql(Configuration.GetConnectionString("BowlingLeagueDbConnection"));
-
-           });
-
-            services.AddScoped<IBowlersRepository, EFBowlersRepository>();
-
+            {
+                //might need to change
+                //options.UseMySql(Configuration["ConnectionStrings:BowlingLeagueDbConnection"]);
+                options.UseMySql(Configuration.GetConnectionString("BowlingLeagueDbConnection"));
+            });
+            services.AddScoped<IBowlingRepository, EFBowlingRepository>();
         }
+    
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,9 +58,18 @@ namespace BowlingLeague
 
             app.UseEndpoints(endpoints =>
             {
+
+                endpoints.MapControllerRoute(
+                    name: "type",
+                    pattern: "{teamName}",
+                    defaults: new { Controller = "Home", action = "Index" }
+                    );
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
             });
         }
     }
